@@ -1,0 +1,24 @@
+# Environment variables — NEVER commit secrets
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+dist-ssr/
+
+# Dependencies (also caught by root, but explicit here)
+node_modules/
+
+# Docker (runtime artifacts)
+# docker-compose.yml and Dockerfile ARE committed
+# but override files should not be
+docker-compose.override.yml
+
+# Database folder — server/schema.sql is canonical
+# db/ only contains an older schema version, no need to track
+db/
+
+# Misc
+*.log
+.DS_Store

@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL ───────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: almasur_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       ${POSTGRES_DB:-almasur_dashboard}
+      POSTGRES_USER:     ${POSTGRES_USER:-almasur}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./server/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-almasur}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+
+  # ── Node API ─────────────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: almasur_api
+    restart: unless-stopped
+    environment:
+      NODE_ENV:    production
+      PORT:        3001
+      DATABASE_URL: postgresql://${POSTGRES_USER:-almasur}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-almasur_dashboard}
+      JWT_SECRET:  ${JWT_SECRET}
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://dashboard.almasur.cl}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+      - frontend
+
+  # ── Nginx (reverse proxy + static files) ─────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: almasur_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./dist:/usr/share/nginx/html:ro          # built frontend (run `pnpm build` first)
+      - /etc/letsencrypt:/etc/letsencrypt:ro      # SSL certs via certbot
+    depends_on:
+      - api
+    networks:
+      - frontend
+
+volumes:
+  postgres_data:
+
+networks:
+  backend:
+  frontend:

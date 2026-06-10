@@ -1,0 +1,41 @@
+{
+  "name": "almasur-dashboard",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vp exec vite",
+    "build": "vp exec vite build",
+    "preview": "vp exec vite preview",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "lucide-react": "catalog:",
+    "recharts": "catalog:",
+    "express": "^4.21.2",
+    "cors": "^2.8.5",
+    "pg": "^8.13.1",
+    "dotenv": "^16.4.7",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "express-rate-limit": "^7.5.0"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "autoprefixer": "catalog:",
+    "postcss": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "~6.0.2",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "@types/express": "^5.0.0",
+    "@types/cors": "^2.8.17",
+    "@types/pg": "^8.11.10",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/bcryptjs": "^2.4.6"
+  }
+}
