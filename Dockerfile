@@ -1,4 +1,15 @@
-# API-only image — frontend is served as static files by nginx
+# ── Stage 1: build frontend ───────────────────────────────────────────────────
+FROM node:20-alpine AS frontend-builder
+
+WORKDIR /app
+
+COPY package.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+# ── Stage 2: API + static frontend ────────────────────────────────────────────
 FROM node:20-alpine
 
 WORKDIR /app
@@ -12,6 +23,9 @@ RUN npm install --omit=dev --ignore-scripts
 
 # Copy server source
 COPY server/ ./server/
+
+# Copy built frontend
+COPY --from=frontend-builder /app/dist ./dist
 
 EXPOSE 3001
 

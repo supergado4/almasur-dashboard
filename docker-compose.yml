@@ -28,22 +28,24 @@ services:
       dockerfile: Dockerfile
     container_name: almasur_api
     restart: unless-stopped
-    ports:
-      - "3001:3001"
     environment:
       NODE_ENV:    production
       PORT:        3001
       DATABASE_URL: postgresql://${POSTGRES_USER:-almasur}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-almasur_dashboard}
       JWT_SECRET:  ${JWT_SECRET}
-      CORS_ORIGIN: ${CORS_ORIGIN:-https://dashboard.almasur.cl}
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://dashboardalmasur.jpedesign.cl}
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - backend
+      - caddy_net
 
 volumes:
   postgres_data:
 
 networks:
   backend:
+  caddy_net:
+    external: true
+    name: n8n-docker-caddy_caddy_net

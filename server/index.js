@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const path       = require("path");
 const express    = require("express");
 const cors       = require("cors");
 const authRoutes  = require("./routes/auth");
@@ -41,6 +42,13 @@ app.use("/api/stats", statsRoutes);
 // ── HEALTH CHECK ──────────────────────────────────────────────────────────────
 app.get("/api/health", function(_req, res) {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+// ── STATIC FRONTEND ───────────────────────────────────────────────────────────
+const distPath = path.join(__dirname, "..", "dist");
+app.use(express.static(distPath));
+app.get(/^\/(?!api).*/, function(_req, res) {
+  res.sendFile(path.join(distPath, "index.html"));
 });
 
 // ── ERROR HANDLER ─────────────────────────────────────────────────────────────
