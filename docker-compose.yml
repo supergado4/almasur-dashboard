@@ -34,6 +34,8 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-almasur}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-almasur_dashboard}
       JWT_SECRET:  ${JWT_SECRET}
       CORS_ORIGIN: ${CORS_ORIGIN:-https://dashboardalmasur.jpedesign.cl}
+      SEED_PASSWORD_CARLA: ${SEED_PASSWORD_CARLA}
+      SEED_PASSWORD_JUAN:  ${SEED_PASSWORD_JUAN}
     depends_on:
       postgres:
         condition: service_healthy
